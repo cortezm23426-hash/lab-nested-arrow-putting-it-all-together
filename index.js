@@ -1,29 +1,34 @@
-function createLoginTracker(userInfo) {
-  let attemptCount = 0;
+// Nested Arrow Functions Lab
+// createLoginTracker should return a function that tracks login attempts
 
-  return (passwordAttempt) => {
-    // If they've already made 3 attempts, lock the account
-    if (attemptCount >= 3) {
+const createLoginTracker = (user) => {
+  let failedAttempts = 0;
+  const maxAttempts = 3;
+
+  return (password) => {
+    // If already locked, always return locked message
+    if (failedAttempts >= maxAttempts) {
       return "Account locked due to too many failed login attempts";
     }
 
-    // This attempt counts (1, 2, 3)
-    attemptCount += 1;
-
-    // If correct password on attempt 1-3
-    if (passwordAttempt === userInfo.password) {
+    // Correct password
+    if (password === user.password) {
       return "Login successful";
     }
 
-    // Wrong password on attempt 1-3
-    return `Attempt ${attemptCount}: Login failed`;
+    // Wrong password: increment and return attempt message
+    failedAttempts += 1;
+
+    // If they just hit the 3rd fail, still return Attempt 3 message (per test)
+    if (failedAttempts <= maxAttempts) {
+      return `Attempt ${failedAttempts}: Login failed`;
+    }
+
+    // Safety fallback (shouldn't be hit)
+    return "Account locked due to too many failed login attempts";
   };
-}
+};
 
-// Export both ways to satisfy any import style
-module.exports = createLoginTracker;
-module.exports.createLoginTracker = createLoginTracker;
-
-
-
-
+module.exports = {
+  createLoginTracker,
+};
